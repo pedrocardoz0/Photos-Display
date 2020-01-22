@@ -21,8 +21,8 @@ class Photo_show:
 		
 		print('''
 		-------- Choose ---------
-		1 - One file
-		2 - Multiple files
+		1 - One File (Copy)
+		2 - All Files (Copy)
 			''')
 		
 		self.path_destiny = path_d
@@ -39,10 +39,32 @@ class Photo_show:
 			for file in os.listdir(path_o):
 				shutil.copy(path_o + '\\' + file, self.path_destiny)
 
-	def photo_delete(self):
-		#To do
-		pass
+		else:
+			print('Not valid')
 
+	def photo_delete(self):
+		print('''
+		------- Choose --------
+		1 - One File (delete)
+		2 - All Files (delete)
+			''')
+
+		choice = int(input('Insert:'))
+
+		if choice == 1:
+			path_to_delete = input('Path and file:')
+
+			os.remove(path_to_delete)
+
+		elif choice == 2:
+
+			path_to_delete = input('Path to delete everything:')
+
+			for file in os.listdir(path_to_delete):
+				os.remove(path_to_delete + '\\' + file)
+
+		else:
+			print('Not valid')
 
 if __name__ == '__main__':
 
@@ -53,7 +75,7 @@ if __name__ == '__main__':
 	
 	>> Options
 
-	[1] -> Insert another path to your photos
+	[1] -> Insert another path to your photos (viewer)
 	[2] -> Copy Photos from another path
 	[3] -> Delete Photos	
 		''')
@@ -67,18 +89,15 @@ if __name__ == '__main__':
 		object_photo.show()
 
 	elif choice == 2:
-
 		path_d = input('Insert the path destiny location:')
-
 		object_photo = Photo_show('')
 		object_photo.photo_copy(path_d)
 
 	elif choice == 3:
-		pass
-		#To do
+		object_photo = Photo_show('')
+		object_photo.photo_delete()
 	
 	else:
 		path_location = 'C:\\Users\\Pedro\\Desktop\\Photos'
 		obj = Photo_show(path_location)
 		obj.show()
-	
