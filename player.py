@@ -66,6 +66,18 @@ class Photo_show:
 		else:
 			print('Not valid')
 
+	def photo_rename(self):
+		path_to_rename = input('Insert the path of the multiple files to rename:')
+		os.chdir(path_to_rename)
+		counter = 0
+
+		for file in os.listdir(path_to_rename):
+			file_name, file_exte = os.path.splitext(file)
+			new_name = 'Photo - {}'.format(str(counter).zfill(2))
+			os.rename(file, (new_name + file_exte))
+			
+			counter += 1
+
 if __name__ == '__main__':
 
 	print('''
@@ -77,7 +89,8 @@ if __name__ == '__main__':
 
 	[1] -> Insert another path to your photos (viewer)
 	[2] -> Copy Photos from another path
-	[3] -> Delete Photos	
+	[3] -> Delete Photos
+	[4] -> Rename Photos	
 		''')
 	choice = int(input())
 
@@ -97,6 +110,10 @@ if __name__ == '__main__':
 		object_photo = Photo_show('')
 		object_photo.photo_delete()
 	
+	elif choice == 4:
+		object_photo = Photo_show('')
+		object_photo.photo_rename()
+
 	else:
 		path_location = 'C:\\Users\\Pedro\\Desktop\\Photos'
 		obj = Photo_show(path_location)
