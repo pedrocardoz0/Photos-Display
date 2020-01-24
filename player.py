@@ -13,17 +13,16 @@ class Photo_show:
 	def clear():
 		os.system('cls')
 
-	def show(self):
+	def show(self): # Ok
 		self.clear()
 		os.chdir(self.path)
 
 		for file in os.listdir(self.path):
-
 			if fnmatch.fnmatch(file, self.extention):
 				image = Image.open(file)
 				image.show()
 
-	def photo_copy(self, path_d):
+	def photo_copy(self, path_d): # Ok
 		self.clear()
 
 		print('''
@@ -34,41 +33,65 @@ class Photo_show:
 		
 		self.path_destiny = path_d
 		command = int(input('Your choice:'))
-
 		if command == 1:			
-			path_o = input('Insert the path origin location (One File):')
-			shutil.copy(path_o, self.path_destiny)
-		
-		elif command == 2:
-			path_o = input('Insert the path origin location (Multiple File):')
+			#path_o = input('Insert the path origin location (One File):')
+			c = 0
+			dicio = {}
+			for file in os.listdir(self.path):
+				c += 1
+				dicio[c] = file
 
-			for file in os.listdir(path_o):
-				shutil.copy(path_o + '\\' + file, self.path_destiny)
+			for keys, value in dicio.items():
+				print('{} -> {}'.format(keys, value))
+
+			id_choice = int(input('Insert the id value:'))
+			if id_choice in dicio.keys():
+				path_final = os.path.join(self.path, dicio[id_choice])
+				shutil.copy(path_final, self.path_destiny)
+
+			else:
+				print('Inform a valid id')
+
+		elif command == 2:
+			#path_o = input('Insert the path origin location (Multiple File):')
+			for file in os.listdir(self.path):
+				shutil.copy(os.path.join(self.path, file), self.path_destiny)
 
 		else:
 			print('Not valid')
 
-	def photo_delete(self):
+	def photo_delete(self): # Ok
 		self.clear()
+
 		print('''
-		------- Choose --------
-		1 - One File (delete)
-		2 - All Files (delete)
+		-------- Choose ---------
+		1 - One File (Delete)
+		2 - All Files (Delete)
 			''')
 
-		choice = int(input('Insert:'))
-
+		choice = int(input('Your choice:'))
 		if choice == 1:
-			file_to_delete = input('Path and file:')
+			
+			dicio = {}
+			c = 0
+			for file in os.listdir(self.path):
+				c += 1
+				dicio[c] = file
 
-			os.remove(file_to_delete)
+			for keys, values in dicio.items():
+				print('{} -> {}'.format(keys, values))
+			
+			id_choice = int(input('Choose your id:'))
+			if id_choice in dicio.keys():
+				os.remove(os.path.join(self.path, dicio[id_choice]))
 
 		elif choice == 2:
-
-			path_to_delete = input('Path to delete everything:')
-
-			for file in os.listdir(path_to_delete):
-				os.remove(path_to_delete + '\\' + file)
+			
+			for filefolder, subfolder, filenames in os.walk(self.path): #Will just remove the files not the folders
+				for filename in filenames:
+					path_created = os.path.join(filefolder, filename)
+					os.remove(path_created)
+			#shutil.rmtree(self.path) #This command will delete everything
 
 		else:
 			print('Not valid')
@@ -121,20 +144,20 @@ if __name__ == '__main__':
 
 	choice = int(input())
 
-	if choice == 1:
-		path_insert = input('Path Location:')
-		path_location = path_insert
-		
-		object_photo = Photo_show(path_location)
+	if choice == 1: # Ok
+		path_insert = input('Path origin location:')
+		object_photo = Photo_show(path_insert)
 		object_photo.show()
 
-	elif choice == 2:
-		path_d = input('Insert the path destiny location:')
-		object_photo = Photo_show('')
-		object_photo.photo_copy(path_d)
+	elif choice == 2: # Ok
+		path_origin = input('Path origin location:')
+		path_destiny = input('Path destiny location:')
+		object_photo = Photo_show(path_origin)
+		object_photo.photo_copy(path_destiny)
 
-	elif choice == 3:
-		object_photo = Photo_show('')
+	elif choice == 3: # Ok
+		path_origin = input('Path origin location:')
+		object_photo = Photo_show(path_origin)
 		object_photo.photo_delete()
 	
 	elif choice == 4:
@@ -144,8 +167,3 @@ if __name__ == '__main__':
 	elif choice == 5:
 		object_photo = Photo_show('')
 		object_photo.zip_photo()
-
-	else:
-		path_location = 'C:\\Users\\Pedro\\Desktop\\Photos'
-		obj = Photo_show(path_location)
-		obj.show()
