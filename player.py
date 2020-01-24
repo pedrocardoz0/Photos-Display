@@ -98,30 +98,25 @@ class Photo_show:
 
 	def photo_rename(self):
 		self.clear()
-		path_to_rename = input('Insert the path of the multiple files to rename:\n')
-		os.chdir(path_to_rename)
+		os.chdir(self.path)
 		counter = 0
 		changes = ''
 
-		for file in os.listdir(path_to_rename):
+		for file in os.listdir(self.path):
 			file_name, file_exte = os.path.splitext(file)
-			
-
 			new_name = 'Photo - {}'.format(str(counter).zfill(2))
-			changes += file_name + file_exte + ' >> ' + new_name + file_exte +'\n'
 			os.rename(file, (new_name + file_exte))
-			counter += 1
 
+			changes += file_name + file_exte + ' >> ' + new_name + file_exte +'\n'
+			counter += 1
 		print('Changes:\n{}'.format(changes))
 
-	def zip_photo(self):
+	def zip_photo(self): # Ok
 		# The zip will be save in the project folder, not in the especific directory
 		# Later: try to save in another path
 		self.clear()
-		path_to_zip = input('Insert the path to zip:\n')
-		
-		with ZipFile('Zip_photo.zip', 'w') as zip_obj:
-			for folderName, _, filenames in os.walk(path_to_zip):
+		with ZipFile('Zip_photo1.zip', 'w') as zip_obj:
+			for folderName, _, filenames in os.walk(self.path):
 				for filename in filenames:
 					file_path = os.path.join(folderName, filename)
 					zip_obj.write(file_path)
@@ -160,10 +155,12 @@ if __name__ == '__main__':
 		object_photo = Photo_show(path_origin)
 		object_photo.photo_delete()
 	
-	elif choice == 4:
-		object_photo = Photo_show('')
+	elif choice == 4: # Ok
+		path_to_rename = input('Insert the path of the multiple files to rename:\n')
+		object_photo = Photo_show(path_to_rename)
 		object_photo.photo_rename()
 
 	elif choice == 5:
-		object_photo = Photo_show('')
+		path_to_zip = input('Insert the path to zip:\n')
+		object_photo = Photo_show(path_to_zip)
 		object_photo.zip_photo()
