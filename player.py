@@ -5,16 +5,29 @@ from zipfile import ZipFile
 
 class Photo_show:
 
-	def __init__(self, path_location):
+	def __init__(self, path_location, user):
 		self.path = path_location # Inser the path of your files
 		self.extention = '*.jpg'
-	
+		self.user = user
+		self.logg = []
+
 	@staticmethod
 	def clear():
 		os.system('cls')
 
 	def show(self): # Ok
 		self.clear()
+		operation = 'View'
+		#Temp (test)
+		'''
+		Mirror
+		self.logg['USER'] = self.user
+		self.logg['OPERAÇÃO'] = 'View'
+		self.logg['ORIGEM'] = self.path
+		self.logg['DESTINO'] = 'NULL'
+		self.logg['TYPE'] = 'Multiple'
+		'''
+
 		os.chdir(self.path)
 
 		for file in os.listdir(self.path):
@@ -22,8 +35,11 @@ class Photo_show:
 				image = Image.open(file)
 				image.show()
 
+		self.report(operation, destiny='')
+
 	def photo_copy(self, path_d): # Ok
 		self.clear()
+		operation = 'Copy'
 
 		print('''
 		-------- Choose ---------
@@ -59,6 +75,8 @@ class Photo_show:
 
 		else:
 			print('Not valid')
+		
+		self.report(operation, destiny = self.path_destiny)
 
 	def photo_delete(self): # Ok
 		self.clear()
@@ -96,7 +114,7 @@ class Photo_show:
 		else:
 			print('Not valid')
 
-	def photo_rename(self):
+	def photo_rename(self): # Ok
 		self.clear()
 		os.chdir(self.path)
 		counter = 0
@@ -121,46 +139,79 @@ class Photo_show:
 					file_path = os.path.join(folderName, filename)
 					zip_obj.write(file_path)
 
-if __name__ == '__main__':
+	def report(self, operation, destiny):
+		'''
+		To start doing the .txt its going to be necessary to identify if the file already exist in the directory
+		if yes, just append the respective values intead of that creat a new file
 
-	print('''
+		In this case in special there is a problem, becasue, when we re-run the scrpit i mean when whe choose another
+		operation inside the program we creat a new object that means that new object will be constucted and the __init__
+		function will re build again, that will delete every thing that it had stored at that moment
+		|
+		V
+		'''
+		self.logg.append(self.user)
+		self.logg.append(self.path)
+		self.logg.append(destiny)
+		self.logg.append(operation)
+		self.logg.append(' ')
+		print(self.logg)
+
+
+if __name__ == '__main__':
+	user = input('Username:')
+	
+	while True:
+		os.system('cls')
+		print('''
 		==============================================
 --------------------- Photo Displayer ----------------------
 		==============================================
 	
-	>> Options
+	>> Options (0 -> Exit)
 
 	[1] -> Insert another path to your photos (viewer)
 	[2] -> Copy Photos from another path
 	[3] -> Delete Photos
 	[4] -> Rename Photos
-	[5] -> Zip Photos	
+	[5] -> Zip Photos
+	[6] -> Generate Report	
 		''')
-
-	choice = int(input())
-
-	if choice == 1: # Ok
-		path_insert = input('Path origin location:')
-		object_photo = Photo_show(path_insert)
-		object_photo.show()
-
-	elif choice == 2: # Ok
-		path_origin = input('Path origin location:')
-		path_destiny = input('Path destiny location:')
-		object_photo = Photo_show(path_origin)
-		object_photo.photo_copy(path_destiny)
-
-	elif choice == 3: # Ok
-		path_origin = input('Path origin location:')
-		object_photo = Photo_show(path_origin)
-		object_photo.photo_delete()
 	
-	elif choice == 4: # Ok
-		path_to_rename = input('Insert the path of the multiple files to rename:\n')
-		object_photo = Photo_show(path_to_rename)
-		object_photo.photo_rename()
+		choice = int(input())
 
-	elif choice == 5:
-		path_to_zip = input('Insert the path to zip:\n')
-		object_photo = Photo_show(path_to_zip)
-		object_photo.zip_photo()
+		if choice == 0:
+			break
+
+		if choice == 1: # Ok
+			path_insert = input('Path origin location:')
+			object_photo = Photo_show(path_insert, user)
+			object_photo.show()
+			#object_photo.report()
+			os.system('PAUSE')
+
+		elif choice == 2: # Ok
+			path_origin = input('Path origin location:')
+			path_destiny = input('Path destiny location:')
+			object_photo = Photo_show(path_origin, user)
+			object_photo.photo_copy(path_destiny)
+			os.system('PAUSE')
+
+		elif choice == 3: # Ok
+			path_origin = input('Path origin location:')
+			object_photo = Photo_show(path_origin, user)
+			object_photo.photo_delete()
+		
+		elif choice == 4: # Ok
+			path_to_rename = input('Insert the path of the multiple files to rename:\n')
+			object_photo = Photo_show(path_to_rename, user)
+			object_photo.photo_rename()
+
+		elif choice == 5: # Ok
+			path_to_zip = input('Insert the path to zip:\n')
+			object_photo = Photo_show(path_to_zip, user)
+			object_photo.zip_photo()
+
+		elif choice == 6:
+			#To do
+			pass
