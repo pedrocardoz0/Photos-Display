@@ -7,7 +7,7 @@ from datetime import datetime
 class Photo_show:
 
 	def __init__(self, path_location, user, time):
-		self.path = path_location # Inser the path of your files
+		self.path = path_location
 		self.time = time
 		self.user = user
 		self.extention = '*.jpg'
@@ -17,7 +17,7 @@ class Photo_show:
 	def clear():
 		os.system('cls')
 
-	def show(self): # X
+	def show(self):
 		self.clear()
 		operation = 'View'
 		os.chdir(self.path)
@@ -29,7 +29,7 @@ class Photo_show:
 
 		self.report(operation, destiny=self.path, type_report = 'Multiple')
 
-	def photo_copy(self, path_d): # X
+	def photo_copy(self, path_d):
 		self.clear()
 		operation = 'Copy'
 		
@@ -67,7 +67,6 @@ class Photo_show:
 				print('Inform a valid id')
 
 		elif command == 2:
-			#path_o = input('Insert the path origin location (Multiple File):')
 			for file in os.listdir(self.path):
 				shutil.copy(os.path.join(self.path, file), self.path_destiny)
 
@@ -76,7 +75,7 @@ class Photo_show:
 		
 		self.report(operation, destiny = self.path_destiny, type_report = type_report_1)
 
-	def photo_delete(self): # X
+	def photo_delete(self):
 		self.clear()
 		operation = 'Delete'
 		print('''
@@ -120,7 +119,7 @@ class Photo_show:
 
 		self.report(operation, destiny = self.path, type_report = type_report_1)
 
-	def photo_rename(self): # X
+	def photo_rename(self):
 		self.clear()
 		os.chdir(self.path)
 
@@ -138,7 +137,7 @@ class Photo_show:
 
 		self.report(operation, destiny = self.path, type_report = 'Multiple')
 	
-	def zip_photo(self): # X
+	def zip_photo(self):
 		self.clear()
 		'''
 				 The zip will be save in the project folder, not in the especific directory
@@ -160,26 +159,58 @@ class Photo_show:
 		self.destiny = destiny
 		self.type = type_report	
 
-		'''
-					To start doing the .txt its going to be necessary to identify if the file already exist in the directory
-					if yes, just append the respective values intead of that creat a new file
-
-					In this case in special there is a problem, becasue, when we re-run the scrpit i mean when whe choose another
-					operation inside the program we creat a new object that means that new object will be constucted and the __init__
-					function will re build again, that will delete every thing that it had stored at that moment
-					|
-					V
-		'''
 		self.logg['USER'] = self.user
 		self.logg['TIME'] = self.time
 		self.logg['OPERAÇÃO'] = self.operation
 		self.logg['ORIGEM'] = self.path
 		self.logg['DESTINO'] = self.destiny
 		self.logg['TYPE'] = self.type
+		os.chdir('C:\\Users\\Pedro\\Desktop\\Player (Python)')
 		print(self.logg)
+		
+		text_first = '''
+ _____________________________________________________________________					
+|------------------------- REPORT ----------------------------------- |
+|_____________________________________________________________________|
 
-	def check_report(self):
-		pass
+-> Operation [{}, {}]
+>> User: {}
+>> Origin: {}
+>> Destiny: {}
+>> Type: {}\n
+'''.format(self.logg['OPERAÇÃO'], 
+	self.logg['TIME'],
+	self.logg['USER'],
+	self.logg['ORIGEM'],
+	self.logg['DESTINO'],
+	self.logg['TYPE'])
+		
+		text_second = '''
+
+-> Operation [{}, {}]
+>> User: {}
+>> Origin: {}
+>> Destiny: {}
+>> Type: {}\n
+'''.format(self.logg['OPERAÇÃO'], 
+	self.logg['TIME'],
+	self.logg['USER'],
+	self.logg['ORIGEM'],
+	self.logg['DESTINO'],
+	self.logg['TYPE'])
+
+		if os.path.exists('report.txt') != True:
+			with open('report.txt', 'w+') as file:
+				file.write(text_first)
+
+		else:
+			with open('report.txt', 'a+') as file:
+				file.write(text_second)
+		
+	def read_report(self):
+		self.clear()
+		with open('report.txt', 'r') as file:
+			print(file.read())
 
 def time():
 	now_time = datetime.now()
@@ -204,7 +235,7 @@ if __name__ == '__main__':
 	[3] -> Delete Photos
 	[4] -> Rename Photos
 	[5] -> Zip Photos
-	[6] -> Generate Report	
+	[6] -> Read Report	
 		''')
 	
 		choice = int(input())
@@ -212,38 +243,38 @@ if __name__ == '__main__':
 		if choice == 0:
 			break
 
-		if choice == 1: # XX
+		if choice == 1:
 			path_insert = input('Path origin location:')
 			object_photo = Photo_show(path_insert, user, time_return)
 			object_photo.show()
-			#object_photo.report()
 			os.system('PAUSE')
 
-		elif choice == 2: # XX
+		elif choice == 2:
 			path_origin = input('Path origin location:')
 			path_destiny = input('Path destiny location:')
 			object_photo = Photo_show(path_origin, user, time_return)
 			object_photo.photo_copy(path_destiny)
 			os.system('PAUSE')
 
-		elif choice == 3: # XX
+		elif choice == 3:
 			path_origin = input('Path origin location:')
 			object_photo = Photo_show(path_origin, user, time_return)
 			object_photo.photo_delete()
 			os.system('PAUSE')
 		
-		elif choice == 4: # Ok
+		elif choice == 4:
 			path_to_rename = input('Insert the path of the multiple files to rename:\n')
 			object_photo = Photo_show(path_to_rename, user, time_return)
 			object_photo.photo_rename()
 			os.system('PAUSE')
 
-		elif choice == 5: # Ok
+		elif choice == 5:
 			path_to_zip = input('Insert the path to zip:\n')
 			object_photo = Photo_show(path_to_zip, user, time_return)
 			object_photo.zip_photo()
 			os.system('PAUSE')
 
 		elif choice == 6:
-			#To do
-			pass
+			object_photo = Photo_show('', '', '')
+			object_photo.read_report()
+			os.system('PAUSE')
